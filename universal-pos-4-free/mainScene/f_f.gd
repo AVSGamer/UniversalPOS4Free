@@ -34,7 +34,7 @@ func _ready() -> void:
 func _evaluate_system_state() -> void:
 	if G.firstRun == 0:
 		detect_first.hide()
-		initialize_sys.text = "Detected unconfigured POS Launch. Initialize Parameters?"
+		initialize_sys.text = "Until I can figure out how to force Landscape view on my end on your device's viewport.\nRotate your phone into LANDSCAPE!\nDetected unconfigured POS Launch. Initialize Parameters?"
 		initialize_sys.show()
 		HBC1.show()
 		yBTN.show()
@@ -42,7 +42,7 @@ func _evaluate_system_state() -> void:
 		chkBoxAlways.show()
 	else:
 		detect_first.hide()
-		initialize_sys.text = "Detected configured POS Launch. Re-Initialize Parameters?"
+		initialize_sys.text = "Until I can figure out how to force Landscape view on my end on your device's viewport.\nRotate your phone into LANDSCAPE!\nDetected configured POS Launch. Re-Initialize Parameters?"
 		if G.firstPrompt == true:
 			initialize_sys.show()
 			HBC1.show()
@@ -54,6 +54,9 @@ func _evaluate_system_state() -> void:
 
 func _transition_to_user_login() -> void:
 	print("System already configured. Redirecting layout to User Login Matrix...")
+	initialize_sys.text = "!!YOU ARE NOT SUPPOSED TO REACH THIS MESSAGE!!\nDon't worry though, there's no harm in it\nBut nice \'FLAG^1337\' you got there! ;) Hackur!\nJust kidding! I just haven't programmed this area yet.\nSee if you can get out of this \'state\'.\nHINT: Website's Cache"
+	if initialize_sys.visible == false:
+		initialize_sys.show()
 	# get_tree().change_scene_to_file("res://scenes/UserLogin.tscn")
 
 # Call this function once the Admin successfully submits the initialization profile
@@ -87,10 +90,12 @@ func _on_btn_n_pressed() -> void:
 		yBTN.hide()
 	if nBTN.visible == true:
 		nBTN.hide()    
-	initialize_sys.text = "!!YOU ARE NOT SUPPOSED TO REACH THIS MESSAGE!!\nDon't worry though, there's no harm in it\nBut nice \'FLAG^1337\' you got there! ;) Hackur!"
-	# Add a safe yield/wait delay here before forcing redirection to terminal login panels
-	await get_tree().create_timer(3.5).timeout
-	_transition_to_user_login()
+	if initialize_sys.visible == true:
+		initialize_sys.hide()
+	# Shuold lead to Login Screen
+	_System_Parameters_Init()
+	
+	
 
 func _on_btn_y_2_pressed() -> void:
 	# Registered Mode -> UI to Input Custom String Fields.
@@ -270,7 +275,7 @@ func _System_Parameters_Init() -> void:
 			vbox_ff_out_gov.add_child(row_hbox)
 
 	# Context/Visibility updates
-	detect_first.text = "You are seeing this Screen to Verify that what you inputted before was saved to your browser's cache."
+	detect_first.text = "You are seeing this Screen to Verify that what you inputted before was saved to your browser's cache.\nNeed to program next clearing these every initialization rather than adding/appending to it."
 	initialize_sys.text = "This is just a test, if you happened to input actually identifying information,\nfeel free to clear this site's cache at least to delete it."
 	if detect_first.visible == false: detect_first.show()
 	if initialize_sys.visible == false: initialize_sys.show()
