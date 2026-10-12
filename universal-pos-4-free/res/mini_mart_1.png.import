@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://diok2pia5mqir"
 path.s3tc="res://.godot/imported/mini_mart_1.png-f8042ab60569a48b827804a0bc9f6164.s3tc.ctex"
+path.etc2="res://.godot/imported/mini_mart_1.png-f8042ab60569a48b827804a0bc9f6164.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://res/mini_mart_1.png"
-dest_files=["res://.godot/imported/mini_mart_1.png-f8042ab60569a48b827804a0bc9f6164.s3tc.ctex"]
+dest_files=["res://.godot/imported/mini_mart_1.png-f8042ab60569a48b827804a0bc9f6164.s3tc.ctex", "res://.godot/imported/mini_mart_1.png-f8042ab60569a48b827804a0bc9f6164.etc2.ctex"]
 
 [params]
 
