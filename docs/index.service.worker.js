@@ -4,7 +4,7 @@
 // Incrementing CACHE_VERSION will kick off the install event and force
 // previously cached resources to be updated from the network.
 /** @type {string} */
-const CACHE_VERSION = '1791818345|3149732596';
+const CACHE_VERSION = '1791818900|3704792481';
 /** @type {string} */
 const CACHE_PREFIX = 'UniversalPOS4Fre-sw-cache-';
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;

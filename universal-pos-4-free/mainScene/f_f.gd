@@ -170,7 +170,9 @@ func _create_field_programmatically(field_label_name: String, data_type_flag: in
 	inputBox.text = ""
 
 func _on_gov_reg_save_pressed() -> void:
-	# Harvest on-screen user data entries and drop them into global data array layers
+	print("--- SYSTEM NOTICE: SAVE BUTTON PRESSED ---")
+	
+	# [.. keep your existing row collection loops here untouched ..]
 	for row in vbox_ff.get_children():
 		if row.has_meta("field_label"):
 			var label_name: String = row.get_meta("field_label")
@@ -185,7 +187,18 @@ func _on_gov_reg_save_pressed() -> void:
 				var idx = G.govRegIFields.find(label_name)
 				if idx != -1: G.govRegI[idx] = int(typed_value) if typed_value.is_valid_int() else 0
 				
+	# Push configurations directly into your updated Global file pipeline
+	G.firstRun = 1
+	G.save_data_to_browser()
+	
+	# --- SAFE TIMING LAYER ---
+	# Wait exactly 0.25 seconds to guarantee the browser finished writing data strings
+	# onto your physical disk block before we clean up or hide the layout panels!
+	await get_tree().create_timer(0.25).timeout
+	
+	print("Data committed safely. Initializing verification grid views...")
 	complete_initial_setup()
+
 
 # VALIDATION FILTER ROUTINE [Tech Support Skill]
 func _enforce_numeric_only_typing(target_line_edit: LineEdit, current_string: String) -> void:

@@ -22,30 +22,32 @@ func _ready() -> void:
 func save_data_to_browser() -> void:
 	var config := ConfigFile.new()
 	
-	# Set your tracking states into the configuration file layout
+	# Pack current values into the data buffer layout parameters
 	config.set_value("SystemState", "firstRun", firstRun)
 	config.set_value("SystemState", "govRegD", govRegD)
 	config.set_value("SystemState", "firstPrompt", firstPrompt)
-	
 	config.set_value("Registration", "govRegDT", govRegDT)
 	config.set_value("Registration", "govRegDTFields", govRegDTFields)
 	config.set_value("Registration", "govRegI", govRegI)
 	config.set_value("Registration", "govRegIFields", govRegIFields)
 	config.set_value("Registration", "govRegEIDPairs", govRegEIDPairs)
 	
-	# Save directly to the secure browser engine database slice
 	var error := config.save(SAVE_PATH)
-	print("Config mapped to user RAM cache layout.")
+	if error == OK:
+		print("Config mapped to local virtual layout memory.")
 		
-		# --- MANDATORY WEB PERSISTENCE FLUSH LINE ---
-		# This forces Emscripten to commit the virtual user filesystem 
-		# data array directly into the browser's permanent IndexedDB slot
-	if OS.has_feature("web"):
-		JavaScriptBridge.eval("FS.syncfs(false, function(err) { if(err) console.log('DB Flush Error:', err); });")
+		# --- SAFELY FORCING INTERCEPT FLUSHES ON HTML5 WEB CONTEXTS ---
+		if OS.has_feature("web"):
+			# 1. Update the native project configuration settings tracking references
+			ProjectSettings.save()
 			
-		print("Config pertaining to POS Settings successfully hard-baked into browser IndexedDB!")
+			# 2. Hard-flush the Emscripten filesystem directly into your browser's IndexedDB table
+			JavaScriptBridge.eval("if(typeof FS !== 'undefined' && FS.syncfs){ FS.syncfs(false, function(err){ if(err){ console.log('DB Sync Error:', err); }else{ console.log('IndexedDB Matrix Flush Complete.'); } }); }")
+			
+		print("POS system configuration push completed.")
 	else:
-		print("Storage write for saving POS Settings to userspace failed with code: ", error)
+		print("Storage write for saving POS Settings failed with code: ", error)
+
 
 # Call this on startup to verify if this is a returning deployment run
 func load_data_from_browser() -> void:
