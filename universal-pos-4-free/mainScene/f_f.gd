@@ -20,7 +20,8 @@ extends Control
 
 func _ready() -> void:
 	# Programmatically force the signal to bind to our custom saving function
-	gov_reg_save.pressed.connect(_on_gov_reg_save_pressed)
+	if not gov_reg_save.pressed.is_connected(_on_gov_reg_save_pressed):
+		gov_reg_save.pressed.connect(_on_gov_reg_save_pressed)
 	
 	# Hide contextual dynamic elements explicitly on boot to maintain an uncluttered view
 	inputBox.hide()
