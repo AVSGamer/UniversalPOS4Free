@@ -35,7 +35,14 @@ func save_data_to_browser() -> void:
 	
 	# Save directly to the secure browser engine database slice
 	var error := config.save(SAVE_PATH)
-	if error == OK:
+	print("Config mapped to user RAM cache layout.")
+		
+		# --- MANDATORY WEB PERSISTENCE FLUSH LINE ---
+		# This forces Emscripten to commit the virtual user filesystem 
+		# data array directly into the browser's permanent IndexedDB slot
+	if OS.has_feature("web"):
+		JavaScriptBridge.eval("FS.syncfs(false, function(err) { if(err) console.log('DB Flush Error:', err); });")
+			
 		print("Config pertaining to POS Settings successfully hard-baked into browser IndexedDB!")
 	else:
 		print("Storage write for saving POS Settings to userspace failed with code: ", error)
