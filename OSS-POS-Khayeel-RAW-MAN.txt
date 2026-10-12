@@ -1,0 +1,175 @@
+# 🏪 UniversalPOS4Free
+
+**UniversalPOS4Free** is a fully open-source, highly adaptable **Point of Sale (POS) system** designed to serve any business vertical—from small retail shops to large-scale hospitality environments.
+
+---
+
+## 🚀 Target Platforms & Roadmap
+
+The software is systematically architected to run across a wide array of deployment ecosystems:
+
+* **🌐 Web Version** — Cloud-hosted or locally deployed in-browser dashboards.
+* **🤖 Android App** — Mobile point-of-sale capabilities for handheld devices and tablets.
+* **🐧 Linux Version** — Stable, low-overhead deployments tailored for dedicated POS terminals.
+* **🪟 Windows Version** — Native desktop support for standard enterprise hardware.
+* **🍏 macOS Version** — *Planned conditionally pending community funding, sponsorship, or strategic developer support.*
+
+---
+
+## 🔒 Architectural Blueprint (Conception: October 12, 2026)
+
+### 📋 Global System Variables & State Control
+* **`firstRun` (`int`)** — A strict operational state countermeasure. Safeguards data by preventing accidental overwrites or malicious factory-reset exploits, ensuring critical records and administrative layouts persist.
+* **`loggedInAccLevel` (`dynamic`)** — An open-ended array structure allowing administrators to provision infinite custom account permission tiers. Includes runtime validation bounds checking to prevent privilege escalation.
+* **`secretKey1` (`string`)** — Core baseline string utilized for foundational system integrity verification (e.g., standard MD5 or SHA hashing frameworks).
+
+---
+
+## 🛡️ Dynamic Custom Encryption Engine
+
+To preserve security in an open-source paradigm, the default cryptographic keys and algorithms visible in this repository serve strictly as structural templates. **UniversalPOS4Free** empowers administrators to compile an entirely custom, obfuscated security layer that lives solely on their local deployment.
+
+
+if firstRun;
+    initialize:
+        Demo-ing or Deplying with Business Registration for This System?
+            0: Output Dialog saying Returning Documents Input from Business Registration is Omitted
+            1: Show Input Form in Customizable Fields for all possible Data Types, to input whatever is returned from the Business Registration Process
+        hardwareOptions(Previously on .NET used ODBC as conneciton driver)
+            BarCodeScanner(optional IDScanning aside from ProductScanning)
+            QRScanner(optional IDScanning aside from ProductScanning)
+            ThermalPrinter(ReciptNumber | ReportPrintedCopyNumber)
+            CashRegister
+            deviceForNotifyingCustomerOrderIsReady(possibly 2.4G tech)
+        business details
+            name
+            registration number
+            registration duration/date
+            logo
+            location
+            branch code
+            currenciesHandled
+        users details
+            corporate photo
+            name
+            password
+            idNum
+            accLevel
+                privileges/accLevel
+                    admin
+                        user logs
+                            cashierAccountTransactionsLogs
+                        system logs
+                            menuOrButtonsClickedByWhichUser
+                        transaction logs
+                            sell
+                            restock
+                            addNewStock
+                            void
+                        users management
+                            createNewUsers
+                            createNewUserCategoriesAndSelectPowersOrPrivileges
+                                privileges/powers:
+                                    modifyUsers
+                                    voidTransactions
+                                    viewReports
+                                    printReports
+                                    processTransactions
+                            deleteUsers
+                        system settings
+                            hardwareOptions
+                            visualUIElementsAdjustments
+                            controlOverWhichButtonsOrMenusAreVisibleToWhichAccountLevels
+                            currenciesHandled
+                            systemLanguageSettings
+                            labelTranslationPerLanguageOverrides
+                            billAmounts
+                            coinDenominations(weights - Optional if utilizing less weight change feature)
+                            supervisorOrAdminAlwaysStartsSystem?
+                                Y: View Yesterday's Profit End of Day or Start of Next Day
+                                N: Turn above feature off or on(Most likely off)
+                    supervisor
+                        print reports
+                        view reports
+                        void transaction
+                    cashier
+                        open/close cashRegister(if used)
+                        process transaction
+                        process payment and change(sukli)
+        inventory
+            productPhoto
+            productCategory(Aisles)
+            productCatHighlySpecific(SectionWithinAisles)
+            productName(ActualName)
+            productBrand
+            supplier
+            supplier contact #
+            supplier contact name
+            restock schedule
+                daily/weekly/monthly
+            groupBuyFlag
+                #
+            pre-orderFlag
+                expectedArrival
+                actualArrival
+                deliveredToBuyer
+                dateDeliveredToBuyer
+                buyer contact platform
+                buyer contact number
+                store pick-up or delivery
+                    delivery courier
+                        in-house
+                        outsource
+                            courier platform if any or personal: j&t, lalamove, etc... whatever are available in the user's area. Will be customizable via intialization and admin control settings
+                            courier name:
+                            courier contact number:
+                            courier delivery date:
+                            courier pick-up time:
+                            courier booking user handler:<userAccountName or ID>
+                expiration
+            useDefaultBarcodes
+            optionalGenerateNewBarCodes(ForItemsWithoutBarCodes OR StoreSpecificTranslationOfDefaultBarCodesToStoreBarCodes)
+            optionalGenerateNewQRCodes(ForItemsWithoutBarCodes OR StoreSpecificTranslationOfDefaultBarCodesToStoreQRCodes)
+            optionalProductStatistics
+            productID(from Bar/QRCode)
+            productStock
+            productPrice
+            lowStockNotification
+        discounts(1 for FLAT another for PERCENTAGE) & API Connection Customization for Verification
+            #allow sysadmins to configure their API Connection; IPAddress/GatewayURL,PORT,PacketType?,Format
+            PWD(Disability)
+            Senior
+            Student
+            Employee
+            Custom(AllowAdminToCreateCustomDiscountProfilesForTheirPromotions)
+        transaction
+            business registration
+            transaction number
+            transaction date
+            itemList(FormattingOfTextOutputNameOfItem to fit the Receipt Size)
+            pricePerItemxcount
+            totalPrice(currencySymbolor3Letter)
+            cashierName
+            formatDependsOnReceiptSizeSpecified
+
+OperationFlow:
+    OpeningDaily(either supervisor or admin or cashier)
+        StartingMoneyAmount for Change or Sukli Calculations(Bills and Coins Denominations)
+            open cash register if available
+        CoinsPrioritization(BiggerOrSmallerFirstOrLesserWeigthFirst)
+        AskIfThereAreNewStocksOrInventoryChanges
+            InputChanges
+        Depending on System Settings -> view Yesterday's earnings/profit.
+    Start Processing Transactions
+        If voiding is needed -> get someone's id who has an account with that privileges
+        If FNB
+            generate order number for the day
+            preparing order
+            order status
+            ready for pick up state
+            notify customer via device(possible using 2.4G Wireless) - optional
+    LoggingOut|TimeOut or Shift
+    Closing
+        Open Cash Register to take money (should be specifiable which account is able to do so)
+        Print Reports(option to do it daily or whenever wanted)
+        Depending on System Settings -> view Today's earnings/profit.
