@@ -13,6 +13,17 @@ var govRegI: Array[int] = []
 var govRegIFields: Array[String] = []
 var govRegEIDPairs: Array[int] = []
 
+# User Accounts
+var userAdmins: Array[String] = []
+var userAdminsPW: Array[String] = []
+var userAdminsCode: Array[String] = []
+var userSV: Array[String] = []
+var userSVPW: Array[String] = []
+var userSVCode: Array[String] = []
+var userOp: Array[String] = []
+var userOpPW: Array[String] = []
+var userOpCode: Array[String] = []
+
 const SAVE_PATH: String = "user://pos_system_config.cfg"
 
 func _ready() -> void:
@@ -31,6 +42,15 @@ func save_data_to_browser() -> void:
 	config.set_value("Registration", "govRegI", govRegI)
 	config.set_value("Registration", "govRegIFields", govRegIFields)
 	config.set_value("Registration", "govRegEIDPairs", govRegEIDPairs)
+	config.set_value("Users", "userAdmins", userAdmins)
+	config.set_value("Users", "userAdminsPW", userAdminsPW)
+	config.set_value("Users", "userAdminsCode", userAdminsCode)
+	config.set_value("Users", "userSV", userSV)
+	config.set_value("Users", "userSVPW", userSVPW)
+	config.set_value("Users", "userSVCode", userSVCode)
+	config.set_value("Users", "userOp", userOp)
+	config.set_value("Users", "userOpPW", userOpPW)
+	config.set_value("Users", "userOpCode", userOpCode)
 	
 	var error := config.save(SAVE_PATH)
 	if error == OK:
@@ -66,6 +86,16 @@ func load_data_from_browser() -> void:
 	govRegI.clear()
 	govRegIFields.clear()
 	govRegEIDPairs.clear()
+	
+	userAdmins.clear()
+	userAdminsPW.clear()
+	userAdminsCode.clear()
+	userSV.clear()
+	userSVPW.clear()
+	userSVCode.clear()
+	userOp.clear()
+	userOpPW.clear()
+	userOpCode.clear()	
 		
 	# Fallbacks are provided as the third parameter if data corruption occurs
 	firstRun = config.get_value("SystemState", "firstRun", 0)
@@ -81,5 +111,14 @@ func load_data_from_browser() -> void:
 	govRegI = config.get_value("Registration", "govRegI", fallback_int_array)
 	govRegIFields = config.get_value("Registration", "govRegIFields", fallback_string_array)
 	govRegEIDPairs = config.get_value("Registration", "govRegEIDPairs", fallback_int_array)
+	userAdmins = config.get_value("Users", "userAdmins", fallback_string_array)
+	userAdminsPW = config.get_value("Users", "userAdminsPW", fallback_string_array)
+	userAdminsCode = config.get_value("Users", "userAdminsCode", fallback_string_array)
+	userSV = config.get_value("Users", "userSV", fallback_string_array)
+	userSVPW = config.get_value("Users", "userSVPW", fallback_string_array)
+	userSVCode = config.get_value("Users", "userSVCode", fallback_string_array)
+	userOp = config.get_value("Users", "userOp", fallback_string_array)
+	userOpPW = config.get_value("Users", "userOpPW", fallback_string_array)
+	userOpCode = config.get_value("Users", "userOpCode", fallback_string_array)
 	
 	print("Loaded system successfully. Current firstRun state is: ", firstRun)

@@ -2,6 +2,7 @@
 extends Control
 
 # Reference the UI elements inside your 2D Control Node using type inference
+@onready var fform_mc := $FFmc
 @onready var fform_pc := $FFmc/FFpc
 @onready var detect_first := $FFmc/FFpc/VBoxContainer/detectFirstRun
 @onready var initialize_sys := $FFmc/FFpc/VBoxContainer/firstRun
@@ -17,6 +18,28 @@ extends Control
 @onready var inputBox := $FFmc/FFpc/VBoxContainer/tInputmc/textInput
 @onready var vbox_ff := $FFmc/FFpc/VBoxContainer/MarginContainer/progGenGovDeets
 @onready var vbox_ff_out_gov := $FFmc/FFpc/VBoxContainer/MarginContainer/outGenGovDeets
+@onready var loginScrBTN := $FFmc/FFpc/VBoxContainer/btnLoginScr
+@onready var login_mc := $LoginMC
+@onready var login_pc := $LoginMC/LoginPC
+@onready var lblFirstLogin := $LoginMC/LoginPC/MarginContainer/VBoxContainer/firstRunLogin
+@onready var btnFirstLogin := $LoginMC/LoginPC/MarginContainer/VBoxContainer/firstRunLogBtn
+@onready var hboxUsername := $LoginMC/LoginPC/MarginContainer/VBoxContainer/Username
+@onready var leLoginUsername := $LoginMC/LoginPC/MarginContainer/VBoxContainer/Username/leLoginUName
+@onready var hboxPassword := $LoginMC/LoginPC/MarginContainer/VBoxContainer/Password
+@onready var leLoginPassword := $LoginMC/LoginPC/MarginContainer/VBoxContainer/Password/leLoginPWord
+@onready var hboxLogOptions := $LoginMC/LoginPC/MarginContainer/VBoxContainer/LoginOptions
+@onready var BCLogOption := $LoginMC/LoginPC/MarginContainer/VBoxContainer/LoginOptions/BCLoginBTN
+@onready var firstLog_mc := $firstLogWizard
+@onready var firstLog_pc := $firstLogWizard/firstLogWizardPC
+@onready var leUName := $firstLogWizard/firstLogWizardPC/MarginContainer/VBoxContainer/HBoxContainer/leUnameWiz
+@onready var lePWord := $firstLogWizard/firstLogWizardPC/MarginContainer/VBoxContainer/HBoxContainer2/lePwordWiz
+@onready var obAccType := $firstLogWizard/firstLogWizardPC/MarginContainer/VBoxContainer/HBoxContainer/obAccTypeWiz
+@onready var leCLogin := $firstLogWizard/firstLogWizardPC/MarginContainer/VBoxContainer/HBoxContainer2/leCLogWiz
+@onready var btnBack2Log := $firstLogWizard/firstLogWizardPC/MarginContainer/VBoxContainer/btnBack2Login
+@onready var pnlAdmin := $AdminPanel
+@onready var pnlAdmin_pc := $AdminPanel/AdminPanelPC
+@onready var pnlNonAdmin := $NonAdminPanel
+@onready var pnlNonAdmin_pc := $NonAdminPanel/NonAdminPanelPC
 
 func _ready() -> void:
 	# Programmatically force the signal to bind to our custom saving function
@@ -29,6 +52,10 @@ func _ready() -> void:
 	nBTN3.hide()
 	yBTN3.hide()
 	vbox_ff_out_gov.hide()
+	if fform_mc.visible == false: fform_mc.show()
+	if fform_pc.visible == false: fform_pc.show()
+	if login_pc.visible == true: login_pc.hide()
+	if login_mc.visible == true: login_mc.hide()
 	_evaluate_system_state()
 
 func _evaluate_system_state() -> void:
@@ -61,13 +88,30 @@ func _transition_to_user_login() -> void:
 
 # Call this function once the Admin successfully submits the initialization profile
 func complete_initial_setup() -> void:
-	G.firstRun = 1
+	# G.firstRun = 1
 	# Save state to local browser/file configuration layers here securely...
 	_System_Parameters_Init()
 
 func _on_btn_y_pressed() -> void:
 	# Start System Parameters Initialization
 	G.firstPrompt = chkBoxAlways.button_pressed
+	# Clear previosly saved.
+	G.govRegEIDPairs.clear()
+	G.govRegDTFields.clear()
+	G.govRegDT.clear()
+	G.govRegI.clear()
+	G.govRegIFields.clear()
+	G.userAdmins.clear()
+	G.userAdminsPW.clear()
+	G.userAdminsCode.clear()
+	G.userSV.clear()
+	G.userSVPW.clear()
+	G.userSVCode.clear()
+	G.userOp.clear()
+	G.userOpPW.clear()
+	G.userOpCode.clear()
+	G.firstRun = 0
+	G.save_data_to_browser()
 	if chkBoxAlways.visible == true:
 		chkBoxAlways.hide()
 	detect_first.text = "Do you have Government Approved Business Registration Details to Save in this POS?"
@@ -193,7 +237,7 @@ func _on_gov_reg_save_pressed() -> void:
 				if idx != -1: G.govRegI[idx] = int(typed_value) if typed_value.is_valid_int() else 0
 				
 	# Push configurations directly into your updated Global file pipeline
-	G.firstRun = 1
+	# G.firstRun = 1
 	G.save_data_to_browser()
 	
 	# --- SAFE TIMING LAYER ---
@@ -288,3 +332,97 @@ func _System_Parameters_Init() -> void:
 	if vbox_ff.visible == true: vbox_ff.hide()
 	# Show verification list view panel
 	if vbox_ff_out_gov.visible == false: vbox_ff_out_gov.show()
+	if loginScrBTN.visible == false: loginScrBTN.show()
+
+
+func _on_btn_login_scr_pressed() -> void:
+	if fform_pc.visible == true: fform_pc.hide()
+	if fform_mc.visible == true: fform_mc.hide()
+	if login_mc.visible == false: login_mc.show()
+	if login_pc.visible == false: login_pc.show()
+	if G.firstRun == 0:
+		if lblFirstLogin.visible == false: lblFirstLogin.show()
+		if btnFirstLogin.visible == false: btnFirstLogin.show()
+		if hboxUsername.visible == true: hboxUsername.hide()
+		if hboxPassword.visible == true: hboxPassword.hide()
+		if hboxLogOptions.visible == true: hboxLogOptions.hide()
+	else:
+		if lblFirstLogin.visible == true: lblFirstLogin.hide()
+		if btnFirstLogin.visible == true: btnFirstLogin.hide()
+		if hboxUsername.visible == false: hboxUsername.show()
+		if hboxPassword.visible == false: hboxPassword.show()
+		if hboxLogOptions.visible == false: hboxLogOptions.show()
+	
+
+
+func _on_first_run_log_btn_pressed() -> void:
+	if login_pc.visible == true: login_pc.hide()
+	if login_mc.visible == true: login_mc.hide()
+	if firstLog_mc.visible == false: firstLog_mc.show()
+	if firstLog_pc.visible == false: firstLog_pc.show()
+
+
+func _on_btn_add_user_wiz_pressed() -> void:
+	if leUName.text != "" && lePWord.text != "":
+		if obAccType.selected == 0:
+			G.userAdmins.append(leUName.text)
+			G.userAdminsPW.append(lePWord.text)
+			G.userAdminsCode.append(leCLogin.text)
+		if obAccType.selected == 1:
+			G.userSV.append(leUName.text)
+			G.userSVPW.append(lePWord.text)
+			G.userSVCode.append(leCLogin.text)
+		if obAccType.selected == 2:
+			G.userOp.append(leUName.text)
+			G.userOpPW.append(lePWord.text)
+			G.userOpCode.append(leCLogin.text)
+		G.save_data_to_browser()
+		if btnBack2Log.visible == false: btnBack2Log.show()
+
+
+func _on_btn_back_2_login_pressed() -> void:
+	if firstLog_pc.visible == true: firstLog_pc.hide()
+	if firstLog_mc.visible == true: firstLog_mc.hide()
+	G.firstRun = 1
+	G.save_data_to_browser()
+	if login_mc.visible == false: login_mc.show()
+	if login_pc.visible == false: login_pc.show()
+	if lblFirstLogin.visible == true: lblFirstLogin.hide()
+	if btnFirstLogin.visible == true: btnFirstLogin.hide()
+	if hboxUsername.visible == false: hboxUsername.show()
+	if hboxPassword.visible == false: hboxPassword.show()
+	if hboxLogOptions.visible == false: hboxLogOptions.show()
+	# Temporarily disable BCLogin
+	if BCLogOption.visible == true: BCLogOption.hide()
+
+
+func _on_up_login_pressed() -> void:
+	# No duplicate checking yet.
+	# check if user account type array for matching input
+	var tmpUname: String = leLoginUsername.text
+	var tmpPword: String = leLoginPassword.text
+	var foundAt: int = -1
+	foundAt = G.userAdmins.find(tmpUname)
+	if foundAt > -1:
+		if G.userAdminsPW[foundAt] == tmpPword:
+			# Go Admin Panel
+			if login_pc.visible == true: login_pc.hide()
+			if login_mc.visible == true: login_mc.hide()
+			if pnlAdmin.visible == false: pnlAdmin.show()
+			if pnlAdmin_pc.visible == false: pnlAdmin_pc.show()
+	foundAt = G.userSV.find(tmpUname)
+	if foundAt > -1:
+		if G.userSVPW[foundAt] == tmpPword:
+			# Go SV Version of Regular User Panel
+			if login_pc.visible == true: login_pc.hide()
+			if login_mc.visible == true: login_mc.hide()
+			if pnlNonAdmin.visible == false: pnlNonAdmin.show()
+			if pnlNonAdmin_pc.visible == false: pnlNonAdmin_pc.show()
+	foundAt = G.userOp.find(tmpUname)
+	if foundAt > -1:
+		if G.userOpPW[foundAt] == tmpPword:
+			if login_pc.visible == true: login_pc.hide()
+			if login_mc.visible == true: login_mc.hide()
+			if pnlNonAdmin.visible == false: pnlNonAdmin.show()
+			if pnlNonAdmin_pc.visible == false: pnlNonAdmin_pc.show()
+			# Go Regular User Panel
